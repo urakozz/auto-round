@@ -171,6 +171,14 @@ class WrapperLinear(torch.nn.Module):
     def bias(self):
         return self.orig_layer.bias
 
+    @property
+    def in_features(self):
+        return self.orig_layer.in_features
+
+    @property
+    def out_features(self):
+        return self.orig_layer.out_features
+
     def _init_tuning_params_and_quant_func(self, defer_search: bool = False):
         """Initializes tuning parameters and quantization functions.
 

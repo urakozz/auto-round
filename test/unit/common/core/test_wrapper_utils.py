@@ -414,6 +414,28 @@ class TestWrapperLinearDeviceTransfer:
         assert wrapper.device == "cpu"
         assert wrapper.orig_layer is orig_layer
 
+    def test_wrapper_linear_exposes_in_out_features(self):
+        from auto_round.wrapper import WrapperLinear
+
+        orig_layer = torch.nn.Linear(128, 64, bias=False)
+        orig_layer.bits = 16
+        orig_layer.sym = True
+        orig_layer.group_size = -1
+        orig_layer.scale_dtype = torch.float32
+        orig_layer.data_type = "int"
+        orig_layer.act_bits = 16
+        orig_layer.act_data_type = "int"
+        orig_layer.act_sym = True
+        orig_layer.act_dynamic = True
+        orig_layer.act_group_size = -1
+        orig_layer.iters = 200
+        orig_layer.tuning_device = "cpu"
+
+        wrapper = WrapperLinear(orig_layer, device="cpu", disable_opt_rtn=True)
+
+        assert wrapper.in_features == 128
+        assert wrapper.out_features == 64
+
     def test_wrapper_linear_forward(self):
         from auto_round.wrapper import WrapperLinear
 
